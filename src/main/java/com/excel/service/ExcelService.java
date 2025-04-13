@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.excel.util.ExcelUtil.export;
 import static com.excel.util.ExcelUtil.getReportHeader;
@@ -63,9 +64,30 @@ public class ExcelService {
     }
 
 
+    public ExportToExcelResponse exportCountryData(String countryCode) {
+        ExportToExcelResponse response = new ExportToExcelResponse();
+        response.setExtension(".xlsx");
+        String header = getReportHeader("EXPORT DATA");
+        Map<String, Object> searchFilters = new LinkedHashMap<>();
+        Country countryList = COUNTRY_LIST.stream().filter(country -> country.getCountryCode().equals(countryCode)).findAny().get();
+        searchFilters.put("Country id", countryList.getCountryId());
+        searchFilters.put("Country name", countryList.getCountryName());
+        List<String> headerNames = List.of("Country id", "Country name", "Country code","Country population");
+        List<List<Object>> records = new ArrayList<>();
+        List<Object> exportRecord = Lists.newArrayList();
+        exportRecord.add(countryList.getCountryId());
+        exportRecord.add(countryList.getCountryName());
+        exportRecord.add(countryList.getCountryCode());
+        exportRecord.add(countryList.getCountryPopulation());
+        records.add(exportRecord);
+        response.setFile(
+                export("report", "E:\\tmp\\", ".xlsx", searchFilters, header,
+                        headerNames, records));
+        return response;
+    }
+
     public ExportToExcelResponse exportCountryData() {
         ExportToExcelResponse response = new ExportToExcelResponse();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         response.setExtension(".xlsx");
         String header = getReportHeader("EXPORT DATA");
         Map<String, Object> searchFilters = new LinkedHashMap<>();
