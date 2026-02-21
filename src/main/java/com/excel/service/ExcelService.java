@@ -109,4 +109,18 @@ public class ExcelService {
                         headerNames, records));
         return response;
     }
+
+
+    public Country getCountryData(Long id) {
+       for(Country c : COUNTRY_LIST){
+           if(c.getCountryId().equals(id)) return c;
+       }
+       return null;
+    }
+
+    public List<Country> getAllCountryData(){
+        return COUNTRY_LIST;
+    }
+
+
 }

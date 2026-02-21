@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.excel.util.ExcelUtil.getBase64StringRepsonse;
 
 @RestController
-@RequestMapping("/api/v1/excel")
+@RequestMapping("/admin")
 public class ExcelController {
 
 
@@ -28,6 +30,17 @@ public class ExcelController {
     public ResponseEntity<ExportToExcelResponse> exportCountryData(@PathVariable String countryCode){
         return getBase64StringRepsonse(excelService.exportCountryData(countryCode));
     }
+
+    @GetMapping("/country/{countryCode}")
+    public ResponseEntity<Country> getCountryData(@PathVariable Long countryCode){
+        return ResponseEntity.ok(excelService.getCountryData(countryCode));
+    }
+
+    @GetMapping("/country")
+    public ResponseEntity<List<Country>> getAllCountryData(){
+        return ResponseEntity.ok(excelService.getAllCountryData());
+    }
+
 
 
 
